@@ -1,0 +1,144 @@
+/* Layout styles  */
+body {
+  font-size: 15px;
+}
+
+button {
+  outline: none;
+}
+
+.container {
+  width: 250px;
+  min-width: 150px;
+}
+
+table {
+  border-spacing: 5px;
+  width: 100%;
+}
+
+table,
+th,
+td {
+  border: 1px solid #dddddd;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  min-width: 90px;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div.container {
+  margin: 10px;
+}
+/* Refresh button styles */
+
+#refresh {
+  background-image: url("./assets/Refresh_icon.png");
+  background-size: cover;
+  width: 35px;
+  height: 35px;
+  border: none;
+  background-color: transparent;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.refresh-start {
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+  animation-play-state: running;
+}
+
+/* Options styles  */
+#options-btn {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 5px;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.active,
+#options-btn:hover {
+  background-color: #ccc;
+}
+
+.active {
+  height: 165px !important;
+  padding: 0 10px;
+}
+
+#options-accordion {
+  height: 0;
+  padding: 0;
+  background-color: white;
+  overflow: hidden;
+  transition: height 400ms ease;
+  -webkit-transition: height 400ms ease;
+  overflow-y: scroll;
+}
+
+.option {
+  margin: 8px;
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: solid 1px grey;
+  flex-wrap: wrap;
+}
+
+.option-btn {
+  margin: 8px;
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Messages styles  */
+
+.err {
+  font-size: 14px;
+  color: #f44336;
+  display: none;
+  padding-left: 18px;
+}
+
+.err-active {
+  display: block !important;
+  flex-basis: 100%;
+}
+
+#saved-msg {
+  font-size: 14px;
+  color: green;
+  display: none;
+}
+
+.saved-active {
+  display: block !important;
+}

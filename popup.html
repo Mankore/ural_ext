@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Main Text Block -->
+      <div class="top-container">
+        <div class="text-container">
+          <div id="player_count_container">
+            <b>
+              <span>Players: </span>
+            </b>
+            <span id="player_num"></span>
+            <span id="player_total"></span>
+          </div>
+          <div id="map_container">
+            <b>
+              <span>Map: </span>
+            </b>
+            <span id="map"></span>
+            <div>
+              <b>
+                <span>Map time: </span>
+              </b>
+              <span id="played_since"></span>
+            </div>
+          </div>
+          <div id="date_container">
+            <b>
+              <span>Updated: </span>
+            </b>
+            <span id="date"></span>
+          </div>
+        </div>
+        <button id="refresh"></button>
+      </div>
+      <hr />
+
+      <!-- Players Block -->
+      <div id="players_container">
+        <b>
+          <span>Top 10 players: </span>
+        </b>
+        <table id="players_table">
+          <tr>
+            <th>Player</th>
+            <th>Score</th>
+          </tr>
+        </table>
+      </div>
+      <hr />
+
+      <!-- Options Block -->
+      <div class="options_container">
+        <button id="options-btn">Options</button>
+        <div id="options-accordion">
+          <div class="option">
+            <span>Autoupdate?</span>
+            <input id="is_updating" type="checkbox" name="is_updating" />
+          </div>
+          <div class="option">
+            <span>Update every(min): </span>
+            <input id="req_every" type="number" min="5" max="300" name="req_every" />
+            <span class="err" id="req_every_err">Min = 5 | Max = 300 minutes</span>
+          </div>
+          <div class="option">
+            <span>Send notifications?</span>
+            <input id="send_notif" type="checkbox" name="send_notif" />
+          </div>
+          <div class="option-btn">
+            <button id="save_options">Save</button>
+            <span id="saved-msg">Saved!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
