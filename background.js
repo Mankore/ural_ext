@@ -8,14 +8,6 @@ const default_options = {
 let timeout;
 let isRecentlySent = false;
 
-// chrome.runtime.onInstalled.addListener(function () {
-//   console.log("onInstalled");
-// });
-
-// chrome.runtime.onStartup.addListener(function () {
-//   console.log("onStartup");
-// });
-
 console.log("Initialising at ", new Date().toTimeString());
 fetchData();
 initScript();
@@ -27,7 +19,7 @@ function initScript() {
   chrome.storage.sync.get("ext_options", function (data) {
     !data.ext_options ? chrome.storage.sync.set({ ext_options: default_options }) : null;
     console.log("Options: ", data.ext_options ? data.ext_options : default_options);
-    if (!data.ext_options.is_updating) return; 
+    if (data.ext_options && !data.ext_options.is_updating) return; 
 
     timeout = setTimeout(
       () => {
@@ -65,6 +57,7 @@ function saveData(data) {
   // Checks if map was changed and sends a notification
   checkIsMapChanged(data.isMapChanged, data.map);
 
+  // Saves all the data in the storage
   chrome.storage.sync.set({ player_num: data.player_num });
   chrome.storage.sync.set({ player_total: data.player_total });
   chrome.storage.sync.set({ map: data.map });
