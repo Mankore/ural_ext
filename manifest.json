@@ -3,8 +3,6 @@
     "version": "1.0",
     "description": "Checks the current session for map, players and their score",
     "permissions": [
-        "activeTab",
-        "declarativeContent",
         "storage",
         "notifications"
     ],
