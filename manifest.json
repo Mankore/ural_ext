@@ -1,5 +1,5 @@
 {
-    "name": "Ural Game Informer",
+    "name": "Uralserver Notifier",
     "version": "1.0",
     "description": "Checks the current session for map, players and their score",
     "permissions": [
