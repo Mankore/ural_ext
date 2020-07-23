@@ -14,6 +14,8 @@ const reqErr = document.getElementById("req_every_err");
 const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 
+chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge then popup icon is clicked
+
 saveOptionsBtn.addEventListener("click", () => {
   saveOptions();
 });
