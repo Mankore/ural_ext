@@ -14,7 +14,7 @@ const reqErr = document.getElementById("req_every_err");
 const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 
-chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge then popup icon is clicked
+chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge when popup icon is clicked
 
 saveOptionsBtn.addEventListener("click", () => {
   saveOptions();
@@ -107,8 +107,8 @@ function initLoading() {
 function saveOptions() {
   savedMsg.classList.remove("saved-active");
 
-  if (reqEvery.value > 300 || reqEvery.value < 5) {
-    //reqEvery.value = 5; // 5 minute restriction is set here
+  if (reqEvery.value > 300 || reqEvery.value < 3) {
+    reqEvery.value = 3; // 3 minutes restriction is set here
     reqErr.classList.add("err-active");
   } else {
     reqErr.classList.remove("err-active");
