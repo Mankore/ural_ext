@@ -14,6 +14,8 @@ const reqErr = document.getElementById("req_every_err");
 const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 
+const logs  = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
+
 chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge when popup icon is clicked
 
 saveOptionsBtn.addEventListener("click", () => {
@@ -121,7 +123,7 @@ function saveOptions() {
     is_updating: isUpdating.checked,
   };
   chrome.storage.sync.set({ ext_options: newOptions });
-  console.log("New options: ", newOptions);
+  logs && console.log("New options: ", newOptions);
 
   // Re-launch the script with timeout to apply new options
   chrome.extension.getBackgroundPage().initScript();

@@ -1,5 +1,7 @@
 const url = "https://ural-srv.herokuapp.com/info";
 
+const logs = false; // Logging disabled by default
+
 const default_options = {
   req_every: 5, // Minutes
   send_notif: true,
@@ -8,22 +10,22 @@ const default_options = {
 let timeout;
 let isRecentlySent = false;
 
-console.log("Initialising at ", new Date().toTimeString());
+logs && console.log("Initialising at ", new Date().toTimeString());
 fetchData();
 initScript();
 
 function initScript() {
-  console.log("initScript at", new Date().toTimeString());
+  logs && console.log("initScript at", new Date().toTimeString());
   timeout !== undefined ? clearTimeout(timeout) : null;
 
   chrome.storage.sync.get("ext_options", function(data) {
     !data.ext_options ? chrome.storage.sync.set({ ext_options: default_options }) : null;
-    console.log("Options: ", data.ext_options ? data.ext_options : default_options);
+    logs && console.log("Options: ", data.ext_options ? data.ext_options : default_options);
     if (data.ext_options && !data.ext_options.is_updating) return;
 
     timeout = setTimeout(
       () => {
-        console.log("Fetching...");
+        logs && console.log("Fetching...");
         fetchData();
         initScript();
       },
@@ -44,7 +46,7 @@ function fetchData(cb = () => {}) {
       }
     })
     .then(data => {
-      console.log(data);
+      logs && console.log(data);
       saveData(data);
       cb();
 
@@ -53,7 +55,7 @@ function fetchData(cb = () => {}) {
 }
 
 function saveData(data) {
-  console.log("Saving received data");
+  logs && console.log("Saving received data");
 
   // Checks if map was changed and sends a notification
   checkIsMapChanged(data.isMapChanged, data.map);
@@ -79,7 +81,7 @@ function checkIsMapChanged(isChanged, mapName) {
           message: `The map has changed to: ${mapName}`
           // contextMessage: 'contextMessage'
         },
-        () => console.log("Notification was sent")
+        () => logs && console.log("Notification was sent")
       );
 
       // Set the badge after Sending Notification
@@ -98,13 +100,13 @@ function checkIsMapChanged(isChanged, mapName) {
 function setBadge() {
   chrome.browserAction.setBadgeBackgroundColor({
     color: '#F00'         
-  }, () => console.log('set Badge color'));
+  }, () => logs && console.log('set Badge color'));
 
   chrome.browserAction.setBadgeText(
     {
       text: "1"
     },
-    () => console.log("Badge was set")
+    () => logs && console.log("Badge was set")
   );
 }
 
@@ -113,6 +115,6 @@ function removeBadge() {
     {
       text: ""
     },
-    () => console.log("Badge was disabled")
+    () => logs && console.log("Badge was disabled")
   );
 }
