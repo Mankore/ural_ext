@@ -13,6 +13,7 @@ const saveOptionsBtn = document.getElementById("save_options");
 const reqErr = document.getElementById("req_every_err");
 const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
+const mainContainer = document.getElementById("main_container");
 
 const logs  = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
 
@@ -88,6 +89,15 @@ function initLoading() {
   chrome.storage.sync.get("map_date", function (data) {
     let map_date = data.map_date;
     played_since.innerHTML = calculateTime(new Date(map_date), new Date());
+  });
+
+  chrome.storage.sync.get("settings", function (data) {
+    devMessage = document.getElementById("dev-message-container");
+    let message = data.settings.msg;
+      if (message != "") {
+        devMessage.innerHTML = message;
+        devMessage.style.display = "block";
+      }
   });
 
   chrome.storage.sync.get("ext_options", function (data) {

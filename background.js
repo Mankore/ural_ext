@@ -1,6 +1,6 @@
 const url = "https://ural-srv.herokuapp.com/info";
 
-const logs = false; // Logging disabled by default
+const logs = true; // Logging disabled by default
 
 const default_options = {
   req_every: 5, // Minutes
@@ -68,6 +68,7 @@ function saveData(data) {
   chrome.storage.sync.set({ players: data.players });
   chrome.storage.sync.set({ map_date: data.map_date });
   chrome.storage.sync.set({ isMapChanged: data.isMapChanged });
+  chrome.storage.sync.set({ settings: data.settings });
 }
 
 function checkIsMapChanged(isChanged, mapName) {
