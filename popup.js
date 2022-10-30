@@ -15,9 +15,14 @@ const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 const mainContainer = document.getElementById("main_container");
 
-const logs  = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
+let logs  = false;
+chrome.runtime.sendMessage({message: "getLogsVariable"}, function(response) {
+  logs = response.logs;
+});
 
-chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge when popup icon is clicked
+chrome.runtime.sendMessage({message: "removeBadge"}, function(response) {
+  console.log(response.message);
+});
 
 saveOptionsBtn.addEventListener("click", () => {
   saveOptions();
@@ -30,7 +35,10 @@ optionsBtn.addEventListener("click", () => {
 initLoading();
 
 refresh.onclick = function () {
-  chrome.extension.getBackgroundPage().fetchData(initLoading);
+  chrome.runtime.sendMessage({message: "fetchData", callback: initLoading}, function(response) {
+    console.log(response.message);
+  });
+
   refresh.classList.add("refresh-start");
   setTimeout(() => {
     refresh.classList.remove("refresh-start");
@@ -136,7 +144,10 @@ function saveOptions() {
   logs && console.log("New options: ", newOptions);
 
   // Re-launch the script with timeout to apply new options
-  chrome.extension.getBackgroundPage().initScript();
+  chrome.runtime.sendMessage({message: "initScript"}, function(response) {
+    console.log(response.message);
+  });
+  
 }
 
 function calculateTime(oldTime, newTime) {
