@@ -99,14 +99,14 @@ function checkIsMapChanged(isChanged, mapName) {
 }
 
 function setBadge() {
-  chrome.browserAction.setBadgeBackgroundColor(
+  chrome.action.setBadgeBackgroundColor(
     {
       color: "#F00",
     },
     () => logs && console.log("set Badge color")
   );
 
-  chrome.browserAction.setBadgeText(
+  chrome.action.setBadgeText(
     {
       text: "1",
     },

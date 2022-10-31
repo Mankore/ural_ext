@@ -35,9 +35,10 @@ optionsBtn.addEventListener("click", () => {
 initLoading();
 
 refresh.onclick = function () {
-  chrome.runtime.sendMessage({message: "fetchData", callback: initLoading}, function(response) {
-    console.log(response.message);
-  });
+  chrome.runtime.sendMessage({message: "fetchData"});
+  setTimeout(() => {
+    initLoading();
+  }, 5000)
 
   refresh.classList.add("refresh-start");
   setTimeout(() => {
@@ -77,6 +78,7 @@ function renderPlayers(players) {
 
 // Get data from storage
 function initLoading() {
+  console.log("initLoading");
   chrome.storage.sync.get("player_num", function (data) {
     player_num.innerHTML = data.player_num + " / ";
   });
