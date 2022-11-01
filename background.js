@@ -1,5 +1,6 @@
 const oldUrl = "https://ural-srv.herokuapp.com/info";
-const url = "https://next-ural-crawler.vercel.app/api/info";
+const oldUrl2 = "https://next-ural-crawler.vercel.app/api/info";
+const url = "https://next-ural-crawler.vercel.app/api/scrape";
 
 const logs = true; // Logging disabled by default
 
@@ -35,7 +36,7 @@ function initScript() {
   });
 }
 
-function fetchData(cb = () => {}) {
+function fetchData(cb) {
   fetch(url)
     .then((response) => {
       if (response.ok) {
@@ -49,7 +50,7 @@ function fetchData(cb = () => {}) {
     .then((data) => {
       logs && console.log(data);
       saveData(data);
-      cb();
+      if (cb) chrome.runtime.sendMessage({ message: "callBackInitLoading" });
     })
     .catch((err) => console.log(err));
 }
@@ -125,19 +126,19 @@ function removeBadge() {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   switch (request.message) {
-    case 'removeBadge':
-      removeBadge()
+    case "removeBadge":
+      removeBadge();
       sendResponse({ message: "Background.js removed Badge" });
       break;
-    case 'fetchData':
-      fetchData(request.callback);
-      sendResponse({message: 'Background.js calling fetchData with initLoading callback'});
+    case "fetchData":
+      fetchData(() => {});
+      sendResponse({ message: "Background.js calling fetchData with initLoading callback" });
       break;
-    case 'initScript':
+    case "initScript":
       initScript();
-      sendResponse({message: 'Background.js calling initScript'});
+      sendResponse({ message: "Background.js calling initScript" });
       break;
-    case 'getLogsVariable':
-      sendResponse({logs: logs});
+    case "getLogsVariable":
+      sendResponse({ logs: logs });
   }
 });

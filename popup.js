@@ -15,12 +15,12 @@ const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 const mainContainer = document.getElementById("main_container");
 
-let logs  = false;
-chrome.runtime.sendMessage({message: "getLogsVariable"}, function(response) {
+let logs = false;
+chrome.runtime.sendMessage({ message: "getLogsVariable" }, function (response) {
   logs = response.logs;
 });
 
-chrome.runtime.sendMessage({message: "removeBadge"}, function(response) {
+chrome.runtime.sendMessage({ message: "removeBadge" }, function (response) {
   console.log(response.message);
 });
 
@@ -35,10 +35,7 @@ optionsBtn.addEventListener("click", () => {
 initLoading();
 
 refresh.onclick = function () {
-  chrome.runtime.sendMessage({message: "fetchData"});
-  setTimeout(() => {
-    initLoading();
-  }, 5000)
+  chrome.runtime.sendMessage({ message: "fetchData" });
 
   refresh.classList.add("refresh-start");
   setTimeout(() => {
@@ -103,11 +100,11 @@ function initLoading() {
 
   chrome.storage.sync.get("settings", function (data) {
     devMessage = document.getElementById("dev-message-container");
-    let message = data.settings.msg;
-      if (message != "") {
-        devMessage.innerHTML = message;
-        devMessage.style.display = "block";
-      }
+    let message = data.settings?.msg;
+    if (message != "" && message !== undefined) {
+      devMessage.innerHTML = message;
+      devMessage.style.display = "block";
+    }
   });
 
   chrome.storage.sync.get("ext_options", function (data) {
@@ -146,12 +143,15 @@ function saveOptions() {
   logs && console.log("New options: ", newOptions);
 
   // Re-launch the script with timeout to apply new options
-  chrome.runtime.sendMessage({message: "initScript"}, function(response) {
+  chrome.runtime.sendMessage({ message: "initScript" }, function (response) {
     console.log(response.message);
   });
-  
 }
 
 function calculateTime(oldTime, newTime) {
   return Math.round((newTime.getTime() - oldTime.getTime()) / (1000 * 60)) + " minutes";
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.message === "callBackInitLoading") initLoading();
+});
