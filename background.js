@@ -1,4 +1,5 @@
-const url = "https://ural-srv.herokuapp.com/info";
+// const url = "https://ural-srv.herokuapp.com/info";
+const url = "https://next-ural-crawler.vercel.app/api/info";
 
 const logs = true; // Logging disabled by default
 
