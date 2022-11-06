@@ -1,13 +1,11 @@
-const oldUrl = "https://ural-srv.herokuapp.com/info";
-const oldUrl2 = "https://next-ural-crawler.vercel.app/api/info";
-const url = "https://next-ural-crawler.vercel.app/api/scrape";
+const url = "https://ural-srv.herokuapp.com/info";
 
 const logs = true; // Logging disabled by default
 
 const default_options = {
   req_every: 5, // Minutes
   send_notif: true,
-  is_updating: true,
+  is_updating: true
 };
 let timeout;
 let isRecentlySent = false;
@@ -20,7 +18,7 @@ function initScript() {
   logs && console.log("initScript at", new Date().toTimeString());
   timeout !== undefined ? clearTimeout(timeout) : null;
 
-  chrome.storage.sync.get("ext_options", function (data) {
+  chrome.storage.sync.get("ext_options", function(data) {
     !data.ext_options ? chrome.storage.sync.set({ ext_options: default_options }) : null;
     logs && console.log("Options: ", data.ext_options ? data.ext_options : default_options);
     if (data.ext_options && !data.ext_options.is_updating) return;
@@ -36,9 +34,9 @@ function initScript() {
   });
 }
 
-function fetchData(cb) {
+function fetchData(cb = () => {}) {
   fetch(url)
-    .then((response) => {
+    .then(response => {
       if (response.ok) {
         return response.json();
       } else {
@@ -47,12 +45,13 @@ function fetchData(cb) {
         //throw Error(response.statusText);
       }
     })
-    .then((data) => {
+    .then(data => {
       logs && console.log(data);
       saveData(data);
-      if (cb) chrome.runtime.sendMessage({ message: "callBackInitLoading" });
+      cb();
+
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 }
 
 function saveData(data) {
@@ -73,14 +72,14 @@ function saveData(data) {
 }
 
 function checkIsMapChanged(isChanged, mapName) {
-  chrome.storage.sync.get("ext_options", function (data) {
+  chrome.storage.sync.get("ext_options", function(data) {
     if (isChanged && data.ext_options.send_notif && !isRecentlySent) {
       chrome.notifications.create(
         {
           type: "basic",
           iconUrl: "./images/favicon-128.png",
           title: "UralServer66 - New Map!",
-          message: `The map has changed to: ${mapName}`,
+          message: `The map has changed to: ${mapName}`
           // contextMessage: 'contextMessage'
         },
         () => logs && console.log("Notification was sent")
@@ -100,45 +99,23 @@ function checkIsMapChanged(isChanged, mapName) {
 }
 
 function setBadge() {
-  chrome.action.setBadgeBackgroundColor(
-    {
-      color: "#F00",
-    },
-    () => logs && console.log("set Badge color")
-  );
+  chrome.browserAction.setBadgeBackgroundColor({
+    color: '#F00'         
+  }, () => logs && console.log('set Badge color'));
 
-  chrome.action.setBadgeText(
+  chrome.browserAction.setBadgeText(
     {
-      text: "1",
+      text: "1"
     },
     () => logs && console.log("Badge was set")
   );
 }
 
 function removeBadge() {
-  chrome.action.setBadgeText(
+  chrome.browserAction.setBadgeText(
     {
-      text: "",
+      text: ""
     },
     () => logs && console.log("Badge was disabled")
   );
 }
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  switch (request.message) {
-    case "removeBadge":
-      removeBadge();
-      sendResponse({ message: "Background.js removed Badge" });
-      break;
-    case "fetchData":
-      fetchData(() => {});
-      sendResponse({ message: "Background.js calling fetchData with initLoading callback" });
-      break;
-    case "initScript":
-      initScript();
-      sendResponse({ message: "Background.js calling initScript" });
-      break;
-    case "getLogsVariable":
-      sendResponse({ logs: logs });
-  }
-});
