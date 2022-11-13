@@ -1,6 +1,6 @@
 {
     "name": "Uralserver Notifier",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "Checks the current session for map, players and their score",
     "permissions": [
         "storage",
