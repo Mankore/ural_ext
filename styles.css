@@ -155,3 +155,69 @@ div.container {
   display: none;
 }
 
+/* Snackbar Message */
+
+#snackbar-message {
+  visibility: hidden;
+  width: 60%;
+  min-height: 35px;
+  background-color: #29cc44;
+  position: absolute;
+  text-align: center;
+  color: white;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 0.5rem;
+  box-shadow: 0px 5px 10px 5px rgba(0, 0, 0, 0.3);
+}
+
+#snackbar-message.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 1rem;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 1rem;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    top: 1rem;
+    opacity: 1;
+  }
+  to {
+    top: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    top: 1rem;
+    opacity: 1;
+  }
+  to {
+    top: 0;
+    opacity: 0;
+  }
+}

@@ -44,8 +44,11 @@ function fetchData(cb = () => {}) {
       logs && console.log(data);
       saveData(data);
       cb();
+      showSnackbar("Successfully refreshed");
     })
-    .catch(() => console.log("Fetching failed at both endpoints"));
+    .catch((err) => {
+      showSnackbar(`Data fetch failed`, "#d12440");
+    });
 }
 
 function saveData(data) {
@@ -115,4 +118,10 @@ function removeBadge() {
     },
     () => logs && console.log("Badge was disabled")
   );
+}
+
+function showSnackbar(message, bgColor = "#29cc44") {
+  let views = chrome.extension.getViews({ type: "popup" });
+  if (views.length === 0) return;
+  chrome.extension.sendMessage({ action: "show_snackbar", message, bgColor }, function () {});
 }

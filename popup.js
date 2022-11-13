@@ -14,8 +14,9 @@ const reqErr = document.getElementById("req_every_err");
 const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 const mainContainer = document.getElementById("main_container");
+const snackbarMessage = document.getElementById("snackbar-message");
 
-const logs  = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
+const logs = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
 
 chrome.extension.getBackgroundPage().removeBadge(); // Remove the badge when popup icon is clicked
 
@@ -94,10 +95,10 @@ function initLoading() {
   chrome.storage.sync.get("settings", function (data) {
     devMessage = document.getElementById("dev-message-container");
     let message = data.settings.msg;
-      if (message != "") {
-        devMessage.innerHTML = message;
-        devMessage.style.display = "block";
-      }
+    if (message != "") {
+      devMessage.innerHTML = message;
+      devMessage.style.display = "block";
+    }
   });
 
   chrome.storage.sync.get("ext_options", function (data) {
@@ -142,3 +143,16 @@ function saveOptions() {
 function calculateTime(oldTime, newTime) {
   return Math.round((newTime.getTime() - oldTime.getTime()) / (1000 * 60)) + " minutes";
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action && request.action === "show_snackbar") {
+    snackbarMessage.classList.add("show");
+    snackbarMessage.textContent = request.message;
+    snackbarMessage.style.backgroundColor = request.bgColor;
+
+    setTimeout(() => {
+      snackbarMessage.classList.remove("show");
+    }, 3000);
+    sendResponse({ message: "Response" });
+  }
+});
