@@ -1,12 +1,13 @@
 // const url = "https://ural-srv.herokuapp.com/info";
-const url = "https://next-ural-crawler.vercel.app/api/info";
+const url = "http://109.120.135.75:3000/info";
+const backupUrl = "https://next-ural-crawler.vercel.app/api/info";
 
 const logs = true; // Logging disabled by default
 
 const default_options = {
   req_every: 5, // Minutes
   send_notif: true,
-  is_updating: true
+  is_updating: true,
 };
 let timeout;
 let isRecentlySent = false;
@@ -19,7 +20,7 @@ function initScript() {
   logs && console.log("initScript at", new Date().toTimeString());
   timeout !== undefined ? clearTimeout(timeout) : null;
 
-  chrome.storage.sync.get("ext_options", function(data) {
+  chrome.storage.sync.get("ext_options", function (data) {
     !data.ext_options ? chrome.storage.sync.set({ ext_options: default_options }) : null;
     logs && console.log("Options: ", data.ext_options ? data.ext_options : default_options);
     if (data.ext_options && !data.ext_options.is_updating) return;
@@ -37,22 +38,14 @@ function initScript() {
 
 function fetchData(cb = () => {}) {
   fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.log(response.status);
-        console.log(response.statusText);
-        //throw Error(response.statusText);
-      }
-    })
-    .then(data => {
+    .catch(() => fetch(backupUrl))
+    .then((response) => response.json())
+    .then((data) => {
       logs && console.log(data);
       saveData(data);
       cb();
-
     })
-    .catch(err => console.log(err));
+    .catch(() => console.log("Fetching failed at both endpoints"));
 }
 
 function saveData(data) {
@@ -73,14 +66,14 @@ function saveData(data) {
 }
 
 function checkIsMapChanged(isChanged, mapName) {
-  chrome.storage.sync.get("ext_options", function(data) {
+  chrome.storage.sync.get("ext_options", function (data) {
     if (isChanged && data.ext_options.send_notif && !isRecentlySent) {
       chrome.notifications.create(
         {
           type: "basic",
           iconUrl: "./images/favicon-128.png",
           title: "UralServer66 - New Map!",
-          message: `The map has changed to: ${mapName}`
+          message: `The map has changed to: ${mapName}`,
           // contextMessage: 'contextMessage'
         },
         () => logs && console.log("Notification was sent")
@@ -100,13 +93,16 @@ function checkIsMapChanged(isChanged, mapName) {
 }
 
 function setBadge() {
-  chrome.browserAction.setBadgeBackgroundColor({
-    color: '#F00'         
-  }, () => logs && console.log('set Badge color'));
+  chrome.browserAction.setBadgeBackgroundColor(
+    {
+      color: "#F00",
+    },
+    () => logs && console.log("set Badge color")
+  );
 
   chrome.browserAction.setBadgeText(
     {
-      text: "1"
+      text: "1",
     },
     () => logs && console.log("Badge was set")
   );
@@ -115,7 +111,7 @@ function setBadge() {
 function removeBadge() {
   chrome.browserAction.setBadgeText(
     {
-      text: ""
+      text: "",
     },
     () => logs && console.log("Badge was disabled")
   );
