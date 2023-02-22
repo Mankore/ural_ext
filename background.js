@@ -68,9 +68,10 @@ function saveData(data) {
   chrome.storage.sync.set({ settings: data.settings });
 }
 
-function checkIsMapChanged(isChanged, mapName) {
+async function checkIsMapChanged(isChanged, mapName) {
+  const oldData = await getStorageData("map");
   chrome.storage.sync.get("ext_options", function (data) {
-    if (isChanged && data.ext_options.send_notif && !isRecentlySent) {
+    if (isChanged && data.ext_options.send_notif && !isRecentlySent && mapName !== oldData.map) {
       chrome.notifications.create(
         {
           type: "basic",
@@ -125,3 +126,10 @@ function showSnackbar(message, bgColor = "#29cc44") {
   if (views.length === 0) return;
   chrome.extension.sendMessage({ action: "show_snackbar", message, bgColor }, function () {});
 }
+
+const getStorageData = (key) =>
+  new Promise((resolve, reject) =>
+    chrome.storage.sync.get(key, (result) =>
+      chrome.runtime.lastError ? reject(Error(chrome.runtime.lastError.message)) : resolve(result)
+    )
+  );
