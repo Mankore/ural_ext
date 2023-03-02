@@ -37,6 +37,7 @@ function initScript() {
 }
 
 function fetchData(cb = () => {}) {
+  updateRefreshState("refresh_pending");
   fetch(url)
     .catch(() => fetch(backupUrl))
     .then((response) => response.json())
@@ -44,9 +45,11 @@ function fetchData(cb = () => {}) {
       logs && console.log(data);
       saveData(data);
       cb();
-      showSnackbar("Successfully refreshed");
+      // showSnackbar("Successfully refreshed");
+      updateRefreshState("refresh_success");
     })
     .catch((err) => {
+      updateRefreshState("refresh_fail");
       showSnackbar(`Data fetch failed`, "#d12440");
     });
 }
@@ -121,10 +124,23 @@ function removeBadge() {
   );
 }
 
-function showSnackbar(message, bgColor = "#29cc44") {
+function isPopupOpen() {
   let views = chrome.extension.getViews({ type: "popup" });
-  if (views.length === 0) return;
+  if (views.length === 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function showSnackbar(message, bgColor = "#29cc44") {
+  if (!isPopupOpen()) return;
   chrome.extension.sendMessage({ action: "show_snackbar", message, bgColor }, function () {});
+}
+
+function updateRefreshState(state) {
+  if (!isPopupOpen()) return;
+  chrome.extension.sendMessage({ action: state }, function () {});
 }
 
 const getStorageData = (key) =>

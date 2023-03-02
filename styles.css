@@ -27,8 +27,16 @@ td {
 
 td,
 th {
-  min-width: 90px;
-  padding: 8px;
+  min-width: 50px;
+  padding: 7px;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 170px;
+  text-overflow: ellipsis;
+}
+
+td:nth-child(2) {
+  text-align: center;
 }
 
 tr:nth-child(even) {
@@ -89,7 +97,7 @@ div.container {
 }
 
 .active {
-  height: 165px !important;
+  height: 180px !important;
   padding: 0 10px;
 }
 
@@ -100,7 +108,6 @@ div.container {
   overflow: hidden;
   transition: height 400ms ease;
   -webkit-transition: height 400ms ease;
-  overflow-y: scroll;
 }
 
 .option {
@@ -176,6 +183,26 @@ div.container {
   visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Refresh state */
+
+#refresh-state {
+  font-size: 25px;
+  color: white;
+  line-height: 0;
+}
+
+#refresh-state.refresh-success {
+  color: #29cc44;
+}
+
+#refresh-state.refresh-pending {
+  color: #dede18;
+}
+
+#refresh-state.refresh-fail {
+  color: red;
 }
 
 @-webkit-keyframes fadein {

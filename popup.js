@@ -15,6 +15,7 @@ const savedMsg = document.getElementById("saved-msg");
 const isUpdating = document.getElementById("is_updating");
 const mainContainer = document.getElementById("main_container");
 const snackbarMessage = document.getElementById("snackbar-message");
+const refreshState = document.getElementById("refresh-state");
 
 const logs = chrome.extension.getBackgroundPage.logs; // Logs war from background script.
 
@@ -145,14 +146,27 @@ function calculateTime(oldTime, newTime) {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.action && request.action === "show_snackbar") {
-    snackbarMessage.classList.add("show");
-    snackbarMessage.textContent = request.message;
-    snackbarMessage.style.backgroundColor = request.bgColor;
+  if (!request.action) return;
 
-    setTimeout(() => {
-      snackbarMessage.classList.remove("show");
-    }, 3000);
-    sendResponse({ message: "Response" });
+  switch (request.action) {
+    case "show_snackbar":
+      snackbarMessage.classList.add("show");
+      snackbarMessage.textContent = request.message;
+      snackbarMessage.style.backgroundColor = request.bgColor;
+
+      setTimeout(() => {
+        snackbarMessage.classList.remove("show");
+      }, 3000);
+      sendResponse({ message: "Response" });
+    case "refresh_success":
+      refreshState.className = "refresh-success";
+      break;
+    case "refresh_fail":
+      refreshState.className = "refresh-fail";
+      break;
+    case "refresh_pending":
+      refreshState.className = "refresh-pending";
+    default:
+      break;
   }
 });
