@@ -1,5 +1,5 @@
 // const url = "https://ural-srv.herokuapp.com/info";
-const url = "http://109.120.135.75:3000/info";
+const url = "http://31.28.14.190:3000/info";
 const backupUrl = "https://next-ural-crawler.vercel.app/api/info";
 
 const logs = true; // Logging disabled by default
